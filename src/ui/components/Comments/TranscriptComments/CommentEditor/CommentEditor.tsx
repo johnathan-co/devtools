@@ -12,8 +12,6 @@ import { FocusContext } from "../CommentCard";
 import classNames from "classnames";
 import { Editor } from "@tiptap/react";
 
-export const PERSIST_COMM_DEBOUNCE_DELAY = 500;
-
 export function getCommentEditorDOMId(comment: Comment | Reply) {
   return `comment-editor-${comment.id}`;
 }
@@ -21,20 +19,20 @@ export function getCommentEditorDOMId(comment: Comment | Reply) {
 type CommentEditorProps = PropsFromRedux & {
   comment: Comment | Reply;
   editable: boolean;
-  handleSubmit: (inputValue: string) => void;
-  onCreate: (editor: { editor: Pick<Editor, "commands"> }) => void;
-  onUpdate: (editor: { editor: Pick<Editor, "getJSON"> }) => void;
-  handleCancel: () => void;
+  handleSubmit?: (inputValue: string) => void;
+  onCreate?: (editor: { editor: Pick<Editor, "commands"> }) => void;
+  onUpdate?: (editor: { editor: Pick<Editor, "getJSON"> }) => void;
+  handleCancel?: () => void;
 };
 
 function CommentEditor({
   clearPendingComment,
   comment,
   editable,
-  handleSubmit,
-  onCreate,
-  onUpdate,
-  handleCancel,
+  handleSubmit = () => {},
+  onCreate = () => {},
+  onUpdate = () => {},
+  handleCancel = () => {},
 }: CommentEditorProps) {
   const recordingId = hooks.useGetRecordingId();
   const { collaborators, recording, loading } = hooks.useGetOwnersAndCollaborators(recordingId!);

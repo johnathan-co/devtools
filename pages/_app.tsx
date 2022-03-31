@@ -155,8 +155,9 @@ function Routing({ Component, pageProps }: AppProps) {
   const [store, setStore] = useState<Store | null>(null);
   const { getFeatureFlag } = useLaunchDarkly();
 
+  debugger;
   useEffect(() => {
-    bootstrapApp().then((store: Store) => setStore(store));
+    bootstrapApp("sdf").then((store: Store) => setStore(store));
   }, []);
 
   if (!store) {

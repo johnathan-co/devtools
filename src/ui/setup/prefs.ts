@@ -14,6 +14,7 @@ import {
 import { ToolboxLayout, ViewMode } from "ui/state/layout";
 import { persistTabs } from "devtools/client/debugger/src/utils/tabs";
 import { getTabs } from "devtools/client/debugger/src/reducers/tabs";
+import { selectors } from "ui/reducers";
 
 export interface ReplaySessions {
   [id: string]: ReplaySession;
@@ -159,7 +160,13 @@ async function maybeUpdateReplaySessions(state: UIState) {
     selectedPanel: getSelectedPanel(state),
     localNags: [...(previousReplaySession?.localNags || [])],
     tabs: persistTabs(getTabs(state)) || [],
+    pendingComment: selectors.getPendingComment(state),
   };
 
   asyncStore.replaySessions = { ...previousReplaySessions, [recordingId]: currentReplaySession };
+}
+
+export async function getReplaySession(recordingId: string) {
+  const sessions = await asyncStore.replaySessions;
+  return sessions[recordingId];
 }
