@@ -165,8 +165,3 @@ async function maybeUpdateReplaySessions(state: UIState) {
 
   asyncStore.replaySessions = { ...previousReplaySessions, [recordingId]: currentReplaySession };
 }
-
-export async function getReplaySession(recordingId: string) {
-  const sessions = await asyncStore.replaySessions;
-  return sessions[recordingId];
-}

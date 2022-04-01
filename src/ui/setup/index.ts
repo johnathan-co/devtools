@@ -26,12 +26,12 @@ declare global {
 let store: UIStore;
 export type AppDispatch = typeof store.dispatch;
 
-export async function bootstrapApp(recordingId: string) {
+export async function bootstrapApp() {
   const initialState = {
     app: initialAppState,
     layout: await getInitialLayoutState(),
     tabs: await getInitialTabsState(),
-    comments: await getInitialCommentsState(recordingId),
+    comments: await getInitialCommentsState(),
   };
 
   const store = bootstrapStore(initialState);
