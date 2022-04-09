@@ -259,9 +259,17 @@ const DEFAULT_TAB = "headers";
 
 export type NetworkTab = "headers" | "cookies" | "response" | "request" | "stackTrace" | "timings";
 
-const RequestDetails = ({ cx, request }: { cx: any; request: RequestSummary }) => {
+const RequestDetails = ({
+  cx,
+  frames,
+  request,
+}: {
+  cx: any;
+  frames: Record<string, WiredFrame[]>;
+  request: RequestSummary;
+}) => {
   const dispatch = useDispatch();
-  const frames = useSelector(getFormattedFrames)[request.point.point];
+  console.log({ frames });
   const [activeTab, setActiveTab] = useState<NetworkTab>(DEFAULT_TAB);
   const loadedRegions = useSelector(getLoadedRegions)?.loaded;
 
@@ -309,7 +317,9 @@ const RequestDetails = ({ cx, request }: { cx: any; request: RequestSummary }) =
           {activeTab === "cookies" && <Cookies request={request} />}
           {activeTab === "response" && <ResponseBody request={request} />}
           {activeTab === "request" && <RequestBody request={request} />}
-          {activeTab === "stackTrace" && <StackTrace cx={cx} frames={frames} />}
+          {activeTab === "stackTrace" && (
+            <StackTrace cx={cx} frames={frames[request.point.point]} />
+          )}
           {activeTab === "timings" && <Timing request={request} />}
         </div>
       </div>

@@ -23,10 +23,8 @@ import {
   getFramesLoading,
 } from "../../../selectors";
 
-const NUM_FRAMES_SHOWN = 7;
-
 class Frames extends Component {
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const { frames, selectedFrame, frameworkGroupingOn } = this.props;
     return (
       frames !== nextProps.frames ||

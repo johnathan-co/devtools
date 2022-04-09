@@ -33,6 +33,7 @@ export const NetworkMonitor = ({
   currentTime,
   cx,
   events,
+  frames,
   loading,
   requests,
   seek,
@@ -121,6 +122,7 @@ export const NetworkMonitor = ({
               selectedRequestId ? (
                 <RequestDetails
                   cx={cx}
+                  frames={frames}
                   request={data.find(request => request.id === selectedRequestId)!}
                 />
               ) : null

@@ -121,6 +121,7 @@ export const getFocusedRequests = (state: UIState) => {
 };
 
 export const getFormattedFrames = createSelector(getFrames, getSources, (frames, sources) => {
+  console.log({ frames, sources });
   return Object.keys(frames).reduce((acc: Record<string, WiredFrame[]>, frame) => {
     return { ...acc, [frame]: formatCallStackFrames(frames[frame], sources) };
   }, {});
