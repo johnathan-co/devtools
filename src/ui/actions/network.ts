@@ -113,6 +113,7 @@ export function fetchFrames(tsPoint: TimeStampedPoint): UIThunkAction {
     const pause = ThreadFront.ensurePause(tsPoint.point, tsPoint.time);
     const frames = (await pause.getFrames())?.filter(Boolean) || [];
     const formattedFrames = await Promise.all(frames?.map((frame, i) => createFrame(frame, i)));
+
     dispatch({
       type: "SET_FRAMES",
       payload: { frames: formattedFrames, point: tsPoint.point },
