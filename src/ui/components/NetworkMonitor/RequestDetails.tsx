@@ -126,9 +126,19 @@ const Cookies = ({ request }: { request: RequestSummary }) => {
   );
 };
 
-const StackTrace = ({ cx, frames }: { cx: any; frames: WiredFrame[] }) => {
+const StackTrace = ({
+  cx,
+  frames,
+  request,
+}: {
+  cx: any;
+  frames: WiredFrame[];
+  request: RequestSummary;
+}) => {
   const dispatch = useDispatch();
-  const selectFrame = (cx: any, frame: WiredFrame) => dispatch(actions.selectFrame(cx, frame));
+  const selectFrame = async (cx: any, frame: WiredFrame) => {
+    dispatch(actions.selectFrame(cx, frame));
+  };
 
   return (
     <div>
@@ -259,19 +269,11 @@ const DEFAULT_TAB = "headers";
 
 export type NetworkTab = "headers" | "cookies" | "response" | "request" | "stackTrace" | "timings";
 
-const RequestDetails = ({
-  cx,
-  frames,
-  request,
-}: {
-  cx: any;
-  frames: Record<string, WiredFrame[]>;
-  request: RequestSummary;
-}) => {
+const RequestDetails = ({ cx, request }: { cx: any; request: RequestSummary }) => {
   const dispatch = useDispatch();
-  console.log({ frames });
   const [activeTab, setActiveTab] = useState<NetworkTab>(DEFAULT_TAB);
   const loadedRegions = useSelector(getLoadedRegions)?.loaded;
+  const frames = useSelector(getFormattedFrames)[request.point.point];
 
   const { value: httpBodies } = useFeature("httpBodies");
 
@@ -317,9 +319,7 @@ const RequestDetails = ({
           {activeTab === "cookies" && <Cookies request={request} />}
           {activeTab === "response" && <ResponseBody request={request} />}
           {activeTab === "request" && <RequestBody request={request} />}
-          {activeTab === "stackTrace" && (
-            <StackTrace cx={cx} frames={frames[request.point.point]} />
-          )}
+          {activeTab === "stackTrace" && <StackTrace request={request} cx={cx} frames={frames} />}
           {activeTab === "timings" && <Timing request={request} />}
         </div>
       </div>

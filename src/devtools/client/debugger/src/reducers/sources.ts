@@ -472,6 +472,7 @@ export function getSource(state: UIState, id: string) {
 export function getSourceFromId(state: UIState, id: string) {
   const source = getSource(state, id);
   if (!source) {
+    return null;
     throw new Error(`source ${id} does not exist`);
   }
   return source;

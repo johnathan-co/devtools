@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect, ConnectedProps, useDispatch, useSelector } from "react-redux";
 import { actions } from "ui/actions";
 import {
-  getFormattedFrames,
   getResponseBodies,
   getRequestBodies,
   getFocusedEvents,
@@ -22,6 +21,7 @@ import {
   fetchRequestBody,
   hideRequestDetails,
   showRequestDetails,
+  fetchFrames,
 } from "ui/actions/network";
 import { getThreadContext } from "devtools/client/debugger/src/selectors";
 import LoadingProgressBar from "../shared/LoadingProgressBar";
@@ -33,7 +33,6 @@ export const NetworkMonitor = ({
   currentTime,
   cx,
   events,
-  frames,
   loading,
   requests,
   seek,
@@ -104,8 +103,9 @@ export const NetworkMonitor = ({
                 currentTime={currentTime}
                 onRowSelect={row => {
                   trackEvent("net_monitor.select_request_row");
-
+                  dispatch(fetchFrames(row.point));
                   if (row.hasResponseBody) {
+                    dispatch(fetchResponseBody(row.id, row.point.point));
                     dispatch(fetchResponseBody(row.id, row.point.point));
                   }
                   if (row.hasRequestBody) {
@@ -122,7 +122,6 @@ export const NetworkMonitor = ({
               selectedRequestId ? (
                 <RequestDetails
                   cx={cx}
-                  frames={frames}
                   request={data.find(request => request.id === selectedRequestId)!}
                 />
               ) : null
@@ -141,17 +140,13 @@ const connector = connect(
     currentTime: getCurrentTime(state),
     cx: getThreadContext(state),
     events: getFocusedEvents(state),
-    frames: getFormattedFrames(state),
     loadedRegions: getLoadedRegions(state)?.loaded,
     loading: state.network.loading,
     requestBodies: getRequestBodies(state),
     requests: getFocusedRequests(state),
     responseBodies: getResponseBodies(state),
   }),
-  {
-    seek: actions.seek,
-    selectFrame: actions.selectFrame,
-  }
+  { seek: actions.seek }
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
